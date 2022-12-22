@@ -1,4 +1,10 @@
-import NewsApiSevice from './api-service';
+import NewsApiSevice from './js/api-service';
+
+import axios from 'axios';
+import Notiflix from 'notiflix';
+import simpleLightbox from 'simplelightbox';
+
+
 
 const refs = {
     searchForm: document.querySelector('.js-search-form'),

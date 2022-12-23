@@ -1,5 +1,52 @@
 @import '~node_modules/modern-normalize/modern-normalize.css';
 
+.search-form {
+  display: flex;
+  justify-content: center;
+  border-radius: 1px solid red;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.search-form__input {
+  padding: 10px 15px;
+}
+.load-more {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn-ml {
+  margin-left: 10px;
+}
+
+.btn,
+.load-more {
+  color: #fff;
+  background-color: rgb(13, 190, 234);
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+.btn:hover,
+.load-more:hover {
+  color: #fff;
+  background-color: rgb(1, 1, 1);
+}
+.btn:active,
+.load-more:active {
+  color: #fff;
+  background-color: rgb(247, 8, 8);
+}
+
+.btn-mg-auto {
+  display: flex;
+  margin-top: 100px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .gallery {
   display: flex;
   justify-content: center;

@@ -12,15 +12,16 @@ export default class PictureApiSevice {
     async fetchAPI() {
         const options = new URLSearchParams({
             key: API_KEY,
+            page: this.page,
             q: this.searchQuery,
             image_type: 'photo',
             orientation: 'horizontal',
             safesearch: 'true',
-            page: this.page,
             per_page: 40,
+            
         });
         const { data } = await axios(`?${options}`);
-        console.log(data);
+        this.incrementPage()
         return data;
     }
 

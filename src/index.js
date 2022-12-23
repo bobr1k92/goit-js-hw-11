@@ -1,7 +1,8 @@
 import PictureApiSevice from './js/api-service';
 import LoadMoreBtn from './js/loadMoreBtn'
 import {Notify} from 'notiflix';
-import simpleLightbox from 'simplelightbox';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 
 
 
@@ -11,10 +12,14 @@ const refs = {
     galleryContainer: document.querySelector('.gallery')
 }
 
+refs.searchForm.addEventListener('submit', onSearch);
+
 const pictureAPI = new PictureApiSevice();
 const loadMoreBtn = new LoadMoreBtn('load-more', onLoadMore);
-
-refs.searchForm.addEventListener('submit', onSearch);
+const simpleLightBox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
 
 
@@ -23,17 +28,26 @@ async function onSearch(e) {
 
     pictureAPI.query = e.currentTarget.elements.searchQuery.value.trim();
     if (pictureAPI.query === '') {
-      Notify.warning('Введіть що небудь');
+      Notify.warning('Enter something');
+      return; 
     }
     pictureAPI.resetPage();
   try {
     const {hits, totalHits} = await pictureAPI.fetchAPI();
-    renderPictures(hits, totalHits)
+    if(hits.length === 0){
+      Notify.warning("Sorry, there are no images matching your search query. Please try again.")
+      refs.galleryContainer.innerHTML = ''
+      loadMoreBtn.hide();
+      return;
+    }
+    Notify.success(`"Hooray! We found ${totalHits} images."`)
+    renderPictures(hits, totalHits);
+    simpleLightBox.refresh();
+    loadMoreBtn.show()
   } catch (error) {
-    Notify.failure("Винекла помилка");
+    Notify.error("Something is wrong");
   }
 };
-
 
 function renderPictures(hits) {
 const images = hits.map(({
@@ -46,7 +60,7 @@ const images = hits.map(({
     downloads,
 }) => {
     return `<div class="photo-card">
-    <img src="${ webformatURL}" alt="${tags}" loading="lazy" />
+    <a href="${largeImageURL}"><img src="${ webformatURL}" alt="${tags}" loading="lazy" /></a>
     <div class="info">
       <p class="info-item">
         <b>Likes: </b>${likes}
@@ -65,13 +79,23 @@ const images = hits.map(({
 }).join('');
 
 refs.galleryContainer.insertAdjacentHTML('beforeend', images);
-}
+};
+
+
 
 async function onLoadMore() {
+  loadMoreBtn.loading()
   try {
     const {hits, totalHits} = await pictureAPI.fetchAPI();
-    renderPictures(hits, totalHits)
+    renderPictures(hits, totalHits);
+    simpleLightBox.refresh();
+    loadMoreBtn.endloading();
+    if (hits.length < 40) {
+      loadMoreBtn.hide();
+      Notify.info("We're sorry, but you've reached the end of search results.")
+      return; 
+    }
   } catch (error) {
-    Notify.failure("Винекла помилка");
+    Notify.failure("Sorry, there was an Error");
   }
  }

@@ -1,4 +1,5 @@
 import PictureApiSevice from './js/api-service';
+import LoadMoreBtn from './js/loadMoreBtn'
 import {Notify} from 'notiflix';
 import simpleLightbox from 'simplelightbox';
 
@@ -11,9 +12,10 @@ const refs = {
 }
 
 const pictureAPI = new PictureApiSevice();
+const loadMoreBtn = new LoadMoreBtn('load-more', onLoadMore);
 
 refs.searchForm.addEventListener('submit', onSearch);
-// refs.loadMoreBtn.addEventListener('click', onLoadMore);
+
 
 
 async function onSearch(e) {
@@ -30,11 +32,7 @@ async function onSearch(e) {
   } catch (error) {
     Notify.failure("Винекла помилка");
   }
-
-async function onLoadMore() {
-  const {hits, totalHits} = await pictureAPI.fetchAPI();
- }
-}
+};
 
 
 function renderPictures(hits) {
@@ -68,3 +66,12 @@ const images = hits.map(({
 
 refs.galleryContainer.insertAdjacentHTML('beforeend', images);
 }
+
+async function onLoadMore() {
+  try {
+    const {hits, totalHits} = await pictureAPI.fetchAPI();
+    renderPictures(hits, totalHits)
+  } catch (error) {
+    Notify.failure("Винекла помилка");
+  }
+ }

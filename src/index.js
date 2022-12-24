@@ -36,14 +36,18 @@ async function onSearch(e) {
     const {hits, totalHits} = await pictureAPI.fetchAPI();
     if(hits.length === 0){
       Notify.warning("Sorry, there are no images matching your search query. Please try again.")
-      refs.galleryContainer.innerHTML = ''
+      refs.galleryContainer.innerHTML = '';
       loadMoreBtn.hide();
+      this.searchQuery.value = ""
       return;
     }
+    refs.galleryContainer.innerHTML = '';
     Notify.success(`"Hooray! We found ${totalHits} images."`)
     renderPictures(hits, totalHits);
     simpleLightBox.refresh();
     loadMoreBtn.show()
+    this.searchQuery.value = "";
+  
   } catch (error) {
     Notify.error("Something is wrong");
   }

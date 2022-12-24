@@ -28,7 +28,7 @@ async function onSearch(e) {
 
     pictureAPI.query = e.currentTarget.elements.searchQuery.value.trim();
     if (pictureAPI.query === '') {
-      Notify.warning('Enter something');
+      Notify.warning('Please enter a valid request');
       return; 
     }
     pictureAPI.resetPage();
@@ -49,7 +49,7 @@ async function onSearch(e) {
     this.searchQuery.value = "";
   
   } catch (error) {
-    Notify.error("Something is wrong");
+    Notify.error("Something is wrong, please reload the page");
   }
 };
 
@@ -100,6 +100,6 @@ async function onLoadMore() {
       return; 
     }
   } catch (error) {
-    Notify.failure("Sorry, there was an Error");
+    Notify.failure("Something is wrong, please reload the page");
   }
  }
